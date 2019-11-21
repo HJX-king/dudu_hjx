@@ -109,11 +109,12 @@ public class MessageUtil {
 		// 得到xml根元素
 		Element root = document.getRootElement();
 		// 得到根元素的所有子节点
-		List<Element> elementList = root.elements();
+ 		List<Element> elementList = root.elements();
 
 		// 遍历所有子节点
-		for (Element e : elementList)
+		for (Element e : elementList) {
 			map.put(e.getName(), e.getText());
+		}
 
 		// 释放资源
 		inputStream.close();

@@ -8,6 +8,9 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.hjx.project.weixin.api.hitokoto.HitokotoUtil;
+import com.hjx.project.weixin.api.tuling.TulingUtil;
+import com.hjx.project.weixin.api.tuling.bean.TulingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,8 +35,10 @@ import com.hjx.project.weixin.bean.resp.TextMessage;
 
 @Service
 public class CoreService {
-
-
+	@Autowired
+	private  TulingUtil tulingUtil;
+	@Autowired
+	private HitokotoUtil hitokotoUtil;
 	/**
 	 * 处理微信发来的请求
 	 * 
@@ -41,6 +46,7 @@ public class CoreService {
 	 * @return
 	 */
 	public String processRequest(HttpServletRequest request) {
+		String[] ak={"99e51b5bb8fa43ab82b69e912b130324","564b786b714a488fb5122fc1b1f71ac8","a10ca940f610473ba8384a7cef0d74a2"};
 		String respMessage = null;
 		try {
 			// 默认返回的文本消息内容
@@ -60,7 +66,7 @@ public class CoreService {
 			TextMessage textMessage = new TextMessage();
 			textMessage.setToUserName(fromUserName);
 			textMessage.setFromUserName(toUserName);
-			textMessage.setCreateTime(new Date().getTime());
+			textMessage.setCreateTime(System.currentTimeMillis());
 			textMessage.setMsgType(MessageUtil.RESP_MESSAGE_TYPE_TEXT);
 			textMessage.setFuncFlag(0);
 			// 由于href属性值必须用双引号引起，这与字符串本身的双引号冲突，所以要转义
@@ -79,13 +85,28 @@ public class CoreService {
 			NewsMessage newsMessage = new NewsMessage();
 			newsMessage.setToUserName(fromUserName);
 			newsMessage.setFromUserName(toUserName);
-			newsMessage.setCreateTime(new Date().getTime());
+			newsMessage.setCreateTime(System.currentTimeMillis());
 			newsMessage.setMsgType(MessageUtil.RESP_MESSAGE_TYPE_NEWS);
 			newsMessage.setFuncFlag(0);
 
 			// 文本消息
 			if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_TEXT)) {
-				respContent = "您发送的是文本消息！";
+				//respContent=tulingUtil.sendMessage(content);
+				//respContent = "您发送的是文本消息！";
+				int index=0;
+				String result=tulingUtil.sendMessage(content,ak[index]);
+				if (result.equals("请求次数超限制!")){
+					for ( int i=index; i < ak.length; i++) {
+						result=tulingUtil.sendMessage(content,ak[i]);
+						if(!result.equals("请求次数超限制!")) {
+							System.out.println(ak[i]);
+							respContent=result;
+							break;
+						}
+					}
+				}else {
+					respContent=result;
+				}
 			}
 			// 图片消息
 			else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_IMAGE)) {
@@ -122,7 +143,14 @@ public class CoreService {
 					String eventKey = requestMap.get("EventKey");
 
 					if (eventKey.equals("11")) {
-						respContent = "菜单项被点击！";
+						respContent = "会议抢单被点击！";
+
+					}else if (eventKey.equals("31")) {
+						respContent = "联系我们被点击！";
+
+					}else if (eventKey.equals("34")) {
+						 String i= hitokotoUtil.sendMessage();
+						respContent=i;
 
 					}
 					else if (eventKey.equals("70")) {

@@ -46,7 +46,8 @@ public class WeixinUtil {
 			// 从上述SSLContext对象中得到SSLSocketFactory对象
 			SSLSocketFactory ssf = sslContext.getSocketFactory();
 
-			URL url = new URL(requestUrl);
+			//URL url = new URL(requestUrl);
+			URL url= new URL(null, requestUrl, new sun.net.www.protocol.https.Handler());
 			HttpsURLConnection httpUrlConn = (HttpsURLConnection) url.openConnection();
 			httpUrlConn.setSSLSocketFactory(ssf);
 
@@ -105,6 +106,7 @@ public class WeixinUtil {
 		AccessToken accessToken = null;
 
 		String requestUrl = access_token_url.replace("APPID", appid).replace("APPSECRET", appsecret);
+		//得到的是accessToken
 		JSONObject jsonObject = httpRequest(requestUrl, "GET", null);
 		System.out.println("获取凭证："+jsonObject.toString());
 		// 如果请求成功
@@ -113,7 +115,6 @@ public class WeixinUtil {
 				accessToken = new AccessToken();
 				accessToken.setToken(jsonObject.getString("access_token"));
 				accessToken.setExpiresIn(jsonObject.getInt("expires_in"));
-				
 			//	System.out.println(accessToken.getExpiresIn());
 			} catch (Exception e) {
 				accessToken = null;
