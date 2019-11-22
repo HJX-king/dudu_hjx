@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.hjx.project.weixin.api.accessToken.AccessTokenRedis;
 import com.hjx.project.weixin.api.hitokoto.HitokotoUtil;
 import com.hjx.project.weixin.api.tuling.TulingUtil;
 import com.hjx.project.weixin.api.tuling.bean.TulingBean;
@@ -39,6 +40,8 @@ public class CoreService {
 	private  TulingUtil tulingUtil;
 	@Autowired
 	private HitokotoUtil hitokotoUtil;
+	@Autowired
+	private AccessTokenRedis accessTokenRedis;
 	/**
 	 * 处理微信发来的请求
 	 * 
@@ -46,7 +49,7 @@ public class CoreService {
 	 * @return
 	 */
 	public String processRequest(HttpServletRequest request) {
-		String[] ak={"99e51b5bb8fa43ab82b69e912b130324","564b786b714a488fb5122fc1b1f71ac8","a10ca940f610473ba8384a7cef0d74a2"};
+
 		String respMessage = null;
 		try {
 			// 默认返回的文本消息内容
@@ -93,20 +96,9 @@ public class CoreService {
 			if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_TEXT)) {
 				//respContent=tulingUtil.sendMessage(content);
 				//respContent = "您发送的是文本消息！";
-				int index=0;
-				String result=tulingUtil.sendMessage(content,ak[index]);
-				if (result.equals("请求次数超限制!")){
-					for ( int i=index; i < ak.length; i++) {
-						result=tulingUtil.sendMessage(content,ak[i]);
-						if(!result.equals("请求次数超限制!")) {
-							System.out.println(ak[i]);
-							respContent=result;
-							break;
-						}
-					}
-				}else {
-					respContent=result;
-				}
+
+				System.out.println("accesstoken的值是"+accessTokenRedis.getAccessTokenVal());
+				respContent=tulingUtil.invoke(content);
 			}
 			// 图片消息
 			else if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_IMAGE)) {

@@ -75,5 +75,6 @@ public class CoreServlet {
 		PrintWriter out = response.getWriter();
 		out.print(respMessage);
 		out.close();
+
 	}
 }

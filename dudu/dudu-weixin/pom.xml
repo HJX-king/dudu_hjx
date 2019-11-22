@@ -72,6 +72,11 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!--springboot+redis(springdata)-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
 
 
     <!-- weixin需要 -->
