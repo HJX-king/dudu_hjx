@@ -1,7 +1,7 @@
 package com.hjx.project.weixin.api.tuling.bean;
 
-import lombok.Data;
 
+import lombok.Data;
 
 /**
  * @Description:

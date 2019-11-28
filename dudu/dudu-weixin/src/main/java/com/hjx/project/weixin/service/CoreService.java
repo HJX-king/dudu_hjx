@@ -12,6 +12,7 @@ import com.hjx.project.weixin.api.accessToken.AccessTokenRedis;
 import com.hjx.project.weixin.api.hitokoto.HitokotoUtil;
 import com.hjx.project.weixin.api.tuling.TulingUtil;
 import com.hjx.project.weixin.api.tuling.bean.TulingBean;
+import com.hjx.project.weixin.api.userInfo.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,6 +43,8 @@ public class CoreService {
 	private HitokotoUtil hitokotoUtil;
 	@Autowired
 	private AccessTokenRedis accessTokenRedis;
+	@Autowired
+    private UserInfoService userInfoService;
 	/**
 	 * 处理微信发来的请求
 	 * 
@@ -97,7 +100,7 @@ public class CoreService {
 				//respContent=tulingUtil.sendMessage(content);
 				//respContent = "您发送的是文本消息！";
 
-				System.out.println("accesstoken的值是"+accessTokenRedis.getAccessTokenVal());
+				//System.out.println("accesstoken的值是"+accessTokenRedis.getAccessTokenVal());
 				respContent=tulingUtil.invoke(content);
 			}
 			// 图片消息
@@ -122,7 +125,16 @@ public class CoreService {
 				String eventType = requestMap.get("Event");
 				// 订阅
 				if (eventType.equals(MessageUtil.EVENT_TYPE_SUBSCRIBE)) {
-					
+					/**
+					 * 收集个人信息
+					 * 1.得到用户的openid
+					 * 2.根据openid向微信服务器发送get请求得到用户授权
+					 * 3.得到用户是JSONObject-->转成weiuser对象
+					 * 4.将weiuser对象进行数据库的添加操作
+					 */
+					userInfoService.userInfo(fromUserName);
+
+
 					respContent = "欢迎关注微信公众号";
 				}
 				// 取消订阅
