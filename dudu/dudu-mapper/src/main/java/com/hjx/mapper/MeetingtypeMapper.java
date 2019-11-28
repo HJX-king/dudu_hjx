@@ -1,7 +1,10 @@
 package com.hjx.mapper;
 
 import com.hjx.po.Meetingtype;
+import org.springframework.stereotype.Repository;
 
+import java.util.List;
+@Repository
 public interface MeetingtypeMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -14,4 +17,6 @@ public interface MeetingtypeMapper {
     int updateByPrimaryKeySelective(Meetingtype record);
 
     int updateByPrimaryKey(Meetingtype record);
+
+    List<Meetingtype> selectType();
 }
