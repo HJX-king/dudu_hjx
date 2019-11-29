@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @Description:
  * @Company:
@@ -59,5 +61,31 @@ public class UserController {
     public  String updateUserInfo(User user){
         int num=userService.updateByPrimaryKeySelective(user);
         return num+"";
+    }
+
+    /**
+     * 页面跳转
+     * @return
+     */
+    @RequestMapping("toLogin")
+    public String tologin(HttpServletRequest request){
+        String wid=request.getParameter("wid");
+        request.setAttribute("wid",wid);
+        return "weixin/login";
+
+    }
+
+    @RequestMapping("toUnauth")
+    public String toUnauth(){
+
+        return "weixin/unauth";
+
+    }
+    @RequestMapping("toMeetingGrab")
+    public String toMeetingGrab(HttpServletRequest request){
+        String uid=request.getParameter("uid");
+        request.setAttribute("uid",uid);
+        return "weixin/meetingGrab/meetingGrab";
+
     }
 }

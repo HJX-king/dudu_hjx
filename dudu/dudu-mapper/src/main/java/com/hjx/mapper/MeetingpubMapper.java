@@ -24,4 +24,15 @@ public interface MeetingpubMapper {
     String selectPcode(String pcode);
 
     List<Meetingpub> selectMeetingPubByUid(String uid);
+
+    /**
+     * bean
+     * map方式
+     * arg0,arg1-->param1,parm2
+     * tname=-1时 代表用户要查所有数据
+     * @param uid
+     * @param tname
+     * @return
+     */
+    List<Meetingpub> selectGrabList(String uid,String tname);
 }

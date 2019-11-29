@@ -1,6 +1,7 @@
 package com.hjx.mapper;
 
 import com.hjx.po.User;
+import org.apache.ibatis.annotations.Select;
 
 public interface UserMapper {
     int deleteByPrimaryKey(String id);
@@ -27,4 +28,10 @@ public interface UserMapper {
      * 执行登录(绑定功能)
      */
     int updateByEmail(User user);
+
+    /**
+     * 根据openid的值查询得到user对象
+     */
+    @Select("select * from user where wid =(select id  from weiuser where openid=#{openid})")
+    User selectUserByOpenId(String openid);
 }

@@ -38,7 +38,8 @@ spring:
     suffix: .html
 
   redis:
-    host: 192.168.147.128
+    dataBase: 12
+    host: 122.51.98.55
     port: 6379
     password: redis
     jedis:

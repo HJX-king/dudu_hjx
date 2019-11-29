@@ -38,5 +38,8 @@ public interface UserService {
      */
     int updateByPrimaryKeySelective(User record);
 
+    User selectUserByOpenId(String openid);
+
+
 
 }

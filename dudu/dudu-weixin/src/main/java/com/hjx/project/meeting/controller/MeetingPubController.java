@@ -42,4 +42,19 @@ public class MeetingPubController {
         return  list;
     }
 
+    /**
+     * 会议-->会议抢单
+     * 可抢单者列表
+     * @param uid
+     * @return
+     */
+
+    @ResponseBody
+    @RequestMapping("grabList")
+    public List<Meetingpub> selectGrabList(@RequestParam("uid") String uid,
+                                           @RequestParam("tname") String tname){
+        List<Meetingpub> list= meetingPubService.selectGrabList(uid,tname);
+        return  list;
+    }
+
 }

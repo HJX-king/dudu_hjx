@@ -157,4 +157,15 @@
   <select id="selectMeetingPubByUid" resultMap="BaseResultMap">
     select * from meetingpub where uid = #{uid} and status=1 order by pcode desc
   </select>
+  <select id="selectGrabList" resultMap="BaseResultMap">
+    select * from meetingpub pub
+    LEFT JOIN `user` u
+    ON ( pub.pzone='全国'  or  u.zone=pub.pzone )
+    where u.id=#{uid}
+    and pub.id not in( select pid from meetinggrab where grabStatus=1 or uid=#{uid}  )
+    <if test="tname!='-1'.toString()">
+    and pub.tname=#{tname}
+    </if>
+    order by pub.pcode desc
+  </select>
 </mapper>

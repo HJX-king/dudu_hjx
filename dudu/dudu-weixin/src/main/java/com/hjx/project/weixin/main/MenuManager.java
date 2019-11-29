@@ -26,7 +26,7 @@ public class MenuManager {
 
  */
 	
-	public final static String REAL_URL="http://myqfhh.natappfree.cc/"; //个人花生壳
+	public final static String REAL_URL="http://t6fj2r.natappfree.cc/"; //个人花生壳
 	//public final static String REAL_URL = "http://wxmobsa.yidatec.com/weixin/"; //正式号服务器	
 	
 	public final static String appId="wx60e2699f2c7a09c2";

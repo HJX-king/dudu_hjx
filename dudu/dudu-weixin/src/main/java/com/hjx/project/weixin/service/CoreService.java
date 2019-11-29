@@ -8,11 +8,15 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.hjx.po.User;
+import com.hjx.po.Weiuser;
 import com.hjx.project.weixin.api.accessToken.AccessTokenRedis;
 import com.hjx.project.weixin.api.hitokoto.HitokotoUtil;
 import com.hjx.project.weixin.api.tuling.TulingUtil;
 import com.hjx.project.weixin.api.tuling.bean.TulingBean;
 import com.hjx.project.weixin.api.userInfo.UserInfoService;
+import com.hjx.service.UserService;
+import com.hjx.service.WeiuserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +49,11 @@ public class CoreService {
 	private AccessTokenRedis accessTokenRedis;
 	@Autowired
     private UserInfoService userInfoService;
+	@Autowired
+	private UserService userService;
+	@Autowired
+	private WeiuserService weiuserService;
+
 	/**
 	 * 处理微信发来的请求
 	 * 
@@ -100,7 +109,7 @@ public class CoreService {
 				//respContent=tulingUtil.sendMessage(content);
 				//respContent = "您发送的是文本消息！";
 
-				//System.out.println("accesstoken的值是"+accessTokenRedis.getAccessTokenVal());
+				System.out.println("accesstoken的值是"+accessTokenRedis.getAccessTokenVal());
 				respContent=tulingUtil.invoke(content);
 			}
 			// 图片消息
@@ -147,7 +156,46 @@ public class CoreService {
 					String eventKey = requestMap.get("EventKey");
 
 					if (eventKey.equals("11")) {
-						respContent = "会议抢单被点击！";
+						List<Article> articles=new ArrayList<>();
+						Article article=new Article();
+						//通过openid(fromUser)来判断是否登录
+						User user=userService.selectUserByOpenId(fromUserName);
+						if (user==null){
+							//没有绑定-->跳到登录页面
+							Weiuser weiuser=weiuserService.selectByOpenId(fromUserName);
+							article.setUrl(MenuManager.REAL_URL+"/user/toLogin/?wid="+weiuser.getId());
+							article.setTitle("您还没有登录,请先去登录");
+							article.setDescription("该功能需要登录");
+							article.setPicUrl("http://5b0988e595225.cdn.sohucs.com/q_70,c_zoom,w_640/images/20190728/b9423646472f42c3ad8d1a5dd1a145e3.jpeg");
+
+						}else{
+							if (user.getRid()==1){
+								//已绑定,发单组-->跳到无权限页面
+								article.setUrl(MenuManager.REAL_URL+"/user/toUnauth");
+								article.setTitle(user.getName()+"您是发单组,无法操作此功能");
+								article.setDescription("该功能只能抢单角色可以访问");
+								article.setPicUrl("http://pic2.zhimg.com/50/v2-b0b1f217decef38ee7206d2a3ab9e86e_hd.jpg");
+
+							}else {
+								//已绑定,抢单组-->跳到抢单页面
+								article.setUrl(MenuManager.REAL_URL+"/user/toMeetingGrab/?uid="+user.getId());
+								article.setTitle(user.getName()+"欢迎您,进行抢单功能");
+								article.setDescription("抢单功能是什么?>>>>使用教程");
+								article.setPicUrl("http://img2.imgtn.bdimg.com/it/u=184803235,1555534009&fm=11&gp=0.jpg");
+
+							}
+
+						}
+						articles.add(article);
+						// 设置图文消息个数
+						newsMessage.setArticleCount(articles.size());
+						// 设置图文消息
+						newsMessage.setArticles(articles);
+						// 将图文消息对象转换为XML字符串
+						respMessage = MessageUtil.newsMessageToXml(newsMessage);
+
+						return respMessage;
+
 
 					}else if (eventKey.equals("31")) {
 						respContent = "联系我们被点击！";
@@ -168,9 +216,7 @@ public class CoreService {
 						article.setPicUrl(
 								"图片");
 						article.setUrl("跳转连接");
-
-						
-						articleList.add(article);						
+					    articleList.add(article);
 						// 设置图文消息个数
 						newsMessage.setArticleCount(articleList.size());
 						// 设置图文消息
@@ -178,6 +224,9 @@ public class CoreService {
 						// 将图文消息对象转换为XML字符串
 						respMessage = MessageUtil.newsMessageToXml(newsMessage);
 						return respMessage;
+
+						
+
 					}
 					
 				}
