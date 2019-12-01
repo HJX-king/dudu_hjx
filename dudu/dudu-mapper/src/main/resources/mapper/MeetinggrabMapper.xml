@@ -125,4 +125,27 @@
       status = #{status,jdbcType=SMALLINT}
     where id = #{id,jdbcType=VARCHAR}
   </update>
+  <resultMap id="selectGrabListByPidResultMap" type="com.hjx.po.Meetinggrab" extends="BaseResultMap">
+    <association property="user" >
+      <id property="id" column="id1"></id>
+      <result property="name" column="name"></result>
+      <result property="province" column="province"></result>
+      <result property="city" column="city"></result>
+    </association>
+
+  </resultMap>
+  <select id="selectGrabListByPid" resultMap="selectGrabListByPidResultMap">
+    select u.id id1,u.name,u.province,u.city,grab.* from meetinggrab grab LEFT
+    JOIN user u on grab.uid=u.id
+    where grab.pid=#{pid} order by grab.createDate asc
+  </select>
+
+  <update id="updateMeetingGrabMatchFail">
+    update meetinggrab set grabStatus=2,grabDate=NOW()
+    where pid=#{pid}
+  </update>
+  <update id="updateMeetingGrabSucc">
+    update meetinggrab set grabStatus=1,grabDate=NOW()
+    where pid=#{pid} and uid=#{uid}
+  </update>
 </mapper>

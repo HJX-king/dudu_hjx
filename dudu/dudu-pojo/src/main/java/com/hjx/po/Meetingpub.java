@@ -26,6 +26,8 @@ public class Meetingpub implements Serializable {
 
     private Short status;
 
+    private Meetinggrab meetinggrab;
+
     private static final long serialVersionUID = 1L;
 
 

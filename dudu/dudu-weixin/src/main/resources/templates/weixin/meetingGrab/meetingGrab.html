@@ -33,7 +33,7 @@
                 url:"[[@{/meetingType/list}]]",
                 success:function (msg) {
                     //	<option value="UI">UI</option>
-                    var appendHTML="<option value='-1'>可抢单</option>";
+                    var appendHTML="<option value='-1' >可抢单</option>";
                     for (var i = 0; i < msg.length; i++) {
                         appendHTML+="<option value='"+msg[i].tname+"'>"+msg[i].tname+"</option>";
                     }
@@ -45,7 +45,22 @@
         }
 
         /**
-         * 可抢单
+         * 抢单页面
+         */
+        function meetingGrabAdd(pid) {
+           // var uid =$("#uid").val();
+            //alert(pid);
+            $("#pid").val(pid);
+            //window.location.href="[[@{meetingGrab/ToaddMeeting}]]";
+            //form表单
+            document.formMeetingGrabAdd.submit();
+
+        }
+
+
+
+        /**
+         * 可抢单页面
          */
         
         function loadGrabList(tname) {
@@ -63,6 +78,7 @@
                     var appendHtml = "<font style='padding: 10px 10px 10px 15px;display: block;color: #777777;'>您共发布了"+msg.length+"场会议</font>";
                     $("#grabNum").append(msg.length);
                     for (var i = 0; i < msg.length; i++) {
+                        var pid=msg[i].id;
                         mname=msg[i].ptitle;
                         remark=msg[i].pcode;
                         dateCurr=msg[i].remark;
@@ -73,11 +89,10 @@
                             "<div style='white-space: nowrap;overflow: hidden;text-overflow:ellipsis;display: block;color: #777777;font-size:16px;padding-top:1px'>" +
                             remark + " / " + dateCurr + "</div></div>" +
                             "<div style='width: 30%;float: right;'>" +
-                            "<button class='able-btn' >选择讲者</button></div></div>";
+                            "<button class='able-btn' onclick='meetingGrabAdd(\""+pid+"\")' >可抢单</button></div></div>";
                     }
                     $("#grabDiv").append(appendHtml);
                 }
-
             });
         }
 
@@ -99,33 +114,38 @@
             $("#two").css("display", "block");
 
             $("#two").empty();
-            var mname="学习SpringBoot";
-            var remark="备注";
-            var dateCurr="时间";
-            var appendHtml = "";
+            var uid=$("#uid").val();
+            $.ajax({
+                type:"post",
+                url:"[[@{/meetingGrab/myMeeting}]]",
+                data:{"uid":uid},
+                success:function (msg) {
+                    var appendHtml = "<font style='padding: 10px 10px 10px 15px;display: block;color: #777777;'>您共抢了"+msg.length+"场会议</font>";
+                    for (var i = 0; i <msg.length ; i++) {
+                        var mname=msg[i].ptitle;
+                        var remark=msg[i].pcode;
+                        var dateCurr=msg[i].tname;
+                        var grabstatus=msg[i].meetinggrab.grabstatus;
+                        appendHtml += "<div style='width: 100%;background-color: white;margin-top: -3px;padding:10px 10px 10px 15px;display: inline-block;'>" +
+                            "<div style='width: 70%;float: left;' onclick='showMeetingInfo(\"" + 1 + "\");'>" +
+                            "<div style='white-space: nowrap;overflow: hidden;text-overflow:ellipsis;display: block;font-size:18px;'>" +
+                            mname + "</div>" +
+                            "<div style='white-space: nowrap;overflow: hidden;text-overflow:ellipsis;display: block;color: #777777;font-size:16px;padding-top:1px'>" +
+                            remark + " / " + dateCurr + "</div></div>" +
+                            "<div style='width: 30%;float: right;'>" ;
 
-
-
-            appendHtml += "<div style='width: 100%;background-color: white;margin-top: -3px;padding:10px 10px 10px 15px;display: inline-block;'>" +
-                "<div style='width: 70%;float: left;' onclick='showMeetingInfo(\"" + 1 + "\");'>" +
-                "<div style='white-space: nowrap;overflow: hidden;text-overflow:ellipsis;display: block;font-size:18px;'>" +
-                mname + "</div>" +
-                "<div style='white-space: nowrap;overflow: hidden;text-overflow:ellipsis;display: block;color: #777777;font-size:16px;padding-top:1px'>" +
-                remark + " / " + dateCurr + "</div></div>" +
-                "<div style='width: 30%;float: right;'>" +
-                "<button class='able-btn' >选择讲者</button></div></div>";
-
-
-
-            appendHtml += "<div style='width: 100%;background-color: white;margin-top: -3px;padding:10px 10px 10px 15px;display: inline-block;'>" +
-                "<div style='width: 70%;float: left;' onclick='showMeetingInfo(\"" + 1 + "\");'>" +
-                "<div style='white-space: nowrap;overflow: hidden;text-overflow:ellipsis;display: block;font-size:18px;'>" +
-                mname + "</div>" +
-                "<div style='white-space: nowrap;overflow: hidden;text-overflow:ellipsis;display: block;color: #777777;font-size:16px;padding-top:1px'>" +
-                remark + " / " + dateCurr + "</div></div>" +
-                "<div style='width: 30%;float: right;'>" +
-                "<button class='able-btn' >选择讲者</button></div></div>";
-
+                        if(grabstatus==0){
+                            appendHtml+="未审批";
+                        }else if (grabstatus==1){
+                            appendHtml+="<button class='able-btn'>抢单成功</button>";
+                        }else {
+                            appendHtml+="抢单失败";
+                        }
+                        appendHtml+="</div></div>";
+                    }
+                    $("#two").append(appendHtml);
+                }
+            });
             $("#two").append(appendHtml);
 
         }
@@ -158,6 +178,11 @@
         </div>
     </div>
 
+    <form name="formMeetingGrabAdd" action="" th:action="@{/meetingGrab/ToaddMeeting}" method="get">
+        <input type="hidden" name="uid" value="" th:value="${uid}" id="uid"/>
+        <input type="hidden" name="pid" id="pid" />
+    </form>
+
 
 
 
@@ -165,6 +190,7 @@
     <div id="two" class="ui-body-d ui-content" style="padding: 0;display: none;width: 100%;">
 
     </div>
+</div>
 </body>
 
 </html>

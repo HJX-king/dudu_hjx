@@ -168,4 +168,22 @@
     </if>
     order by pub.pcode desc
   </select>
+  <resultMap id="MyMap1" type="com.hjx.po.Meetingpub" extends="BaseResultMap">
+    <association property="meetinggrab" javaType="com.hjx.po.Meetinggrab">
+      <id column="id" property="id" jdbcType="VARCHAR" />
+      <result column="pid" property="pid" jdbcType="VARCHAR" />
+      <result column="remark" property="remark" jdbcType="VARCHAR" />
+      <result column="uid" property="uid" jdbcType="VARCHAR" />
+      <result column="createDate" property="createdate" jdbcType="TIMESTAMP" />
+      <result column="grabStatus" property="grabstatus" jdbcType="INTEGER" />
+      <result column="grabDate" property="grabdate" jdbcType="TIMESTAMP" />
+      <result column="status" property="status" jdbcType="SMALLINT" />
+
+    </association>
+
+  </resultMap>
+  <select id="selectMyMeetingList" resultMap="MyMap1">
+    SELECT pub.ptitle,pub.remark,pub.ptime,grab.grabStatus FROM meetinggrab grab left JOIN meetingpub pub ON grab.pid=pub.id
+WHERE grab.uid=#{uid} order by pub.pcode desc 
+  </select>
 </mapper>

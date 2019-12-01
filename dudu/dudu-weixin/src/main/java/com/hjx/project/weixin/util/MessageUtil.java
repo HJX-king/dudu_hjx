@@ -175,11 +175,13 @@ public class MessageUtil {
 				// 对所有xml节点的转换都增加CDATA标记
 				boolean cdata = true;
 
+				@Override
 				@SuppressWarnings("unchecked")
 				public void startNode(String name, Class clazz) {
 					super.startNode(name, clazz);
 				}
 
+				@Override
 				protected void writeText(QuickWriter writer, String text) {
 					if (cdata) {
 						writer.write("<![CDATA[");

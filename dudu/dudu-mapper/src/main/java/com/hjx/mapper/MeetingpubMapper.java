@@ -35,4 +35,10 @@ public interface MeetingpubMapper {
      * @return
      */
     List<Meetingpub> selectGrabList(String uid,String tname);
+    /**
+     * 我的抢单列表
+     * 会议-->会议抢单-->我的抢单
+     *
+     */
+    List<Meetingpub> selectMyMeetingList(String uid);
 }

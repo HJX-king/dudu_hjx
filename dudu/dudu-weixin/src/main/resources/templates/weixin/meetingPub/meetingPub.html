@@ -93,7 +93,7 @@
                             "<div style='white-space: nowrap;overflow: hidden;text-overflow:ellipsis;display: block;color: #777777;font-size:16px;padding-top:1px'>" +
                             remark + " / " + dateCurr + "</div></div>" +
                             "<div style='width: 30%;float: right;'>" +
-                            "<button class='able-btn' >选择讲者</button></div></div>";
+                            "<button class='able-btn' onclick='chooseGrabList(\""+msg[i].id+"\")' >选择讲者</button></div></div>";
 
                     }
                     $("#two").append(appendHtml);
@@ -103,6 +103,11 @@
                 }
 
             });
+        }
+        function chooseGrabList(pid) {
+            var uid=$("#uid").val();
+            var url="/meetingPub/chooseGrabListToPage?uid="+uid+"&pid="+pid+"";
+            window.location.href=url;
         }
 
 
@@ -185,7 +190,7 @@
                         <option value="全国">全国</option>
                         <option value="东区">东区</option>
                         <option value="西区">西区</option>
-                        <option value="西区">西区</option>
+                        <option value="南区">南区</option>
                         <option value="北区">北区</option>
                     </select>
                 </div>
@@ -207,6 +212,7 @@
     <div id="two" class="ui-body-d ui-content" style="padding: 0;display: none;width: 100%;">
 
     </div>
+</div>
 </body>
 
 </html>

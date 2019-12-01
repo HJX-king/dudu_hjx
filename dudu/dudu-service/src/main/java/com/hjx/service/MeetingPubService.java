@@ -18,4 +18,6 @@ public interface MeetingPubService {
 
     List<Meetingpub> selectGrabList(String uid,String tname);
 
+    List<Meetingpub> selectMyMeetingList(String uid);
+
 }

@@ -52,6 +52,11 @@ public class MeetingPubServiceImpl implements MeetingPubService {
         return meetingpubMapper.selectGrabList(uid, tname);
     }
 
+    @Override
+    public List<Meetingpub> selectMyMeetingList(String uid) {
+        return meetingpubMapper.selectMyMeetingList(uid);
+    }
+
     /**
      * 根据会议召开日期进行生成
      * 1.时间进行字符串截取 20191130

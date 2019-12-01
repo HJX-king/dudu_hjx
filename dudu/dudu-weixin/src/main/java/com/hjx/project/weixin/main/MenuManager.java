@@ -26,7 +26,7 @@ public class MenuManager {
 
  */
 	
-	public final static String REAL_URL="http://t6fj2r.natappfree.cc/"; //个人花生壳
+	public final static String REAL_URL="http://anjwfu.natappfree.cc/"; //个人花生壳
 	//public final static String REAL_URL = "http://wxmobsa.yidatec.com/weixin/"; //正式号服务器	
 	
 	public final static String appId="wx60e2699f2c7a09c2";
@@ -134,11 +134,11 @@ public class MenuManager {
 		mainBtn1.setSub_button(new Button[] { btn10,btn11});
 
 		ComplexButton mainBtn2 = new ComplexButton();
-		mainBtn2.setName("公告栏");  //
+		mainBtn2.setName("公告栏");
 		mainBtn2.setSub_button(new Button[] { btn20,btn21,btn22});
 
 		ComplexButton mainBtn3 = new ComplexButton();
-		mainBtn3.setName("系统消息");// btn31, btn32, btn33,
+		mainBtn3.setName("系统消息");
 		mainBtn3.setSub_button(new Button[] { btn31,btn32,btn33,btn34});
 
 		/**
